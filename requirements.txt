@@ -1,0 +1,23 @@
+# Core dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+sentence-transformers==2.2.2
+numpy==1.26.4
+requests==2.31.0
+
+# Machine Learning
+faiss-cpu==1.7.4
+torch>=1.13.0
+
+# Development and Testing
+pytest==7.4.2
+pytest-mock==3.14.1
+
+# Optional: For enhanced features
+httpx==0.25.0  # HTTP client used by testclient
+
+# Note: Ollama CLI must be installed separately
+# Windows: winget install Ollama.Ollama
+# macOS: brew install ollama
+# Linux: curl -fsSL https://ollama.ai/install.sh | sh
