@@ -349,9 +349,6 @@ Idea-Recommendation-model-/
 
 **🚀 Ready to deploy**: Clean, tested, and production-ready codebase!
 
-## 📄 License
-
-This project is open-source and available under the MIT License.
 
 ## 🙏 Acknowledgments
 
@@ -361,17 +358,4 @@ This project is open-source and available under the MIT License.
 - **FastAPI**: For the web framework
 - **Mistral-7B**: For creative idea generation
 
-## 🆕 Latest Updates
 
-- ✅ **Auto-Save Feature**: AI-generated ideas automatically saved to `data/idea.json`
-- ✅ **User-Friendly Interfaces**: Added `get_recommendations.py` script and `web_interface.html`
-- ✅ **Enhanced Documentation**: Comprehensive README with clear usage instructions
-- ✅ **GitHub Ready**: Cleaned up unnecessary files and added proper `.gitignore`
-
----
-
-**Built for**: Innovation teams, product managers, researchers, and anyone seeking AI-powered creative ideation.
-
-**Ready to deploy**: This repository is clean and ready for GitHub upload!
-
-**Perfect for**: Brainstorming sessions, product discovery, market research, and creative problem-solving.
