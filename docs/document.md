@@ -1025,19 +1025,20 @@ python run_evaluation.py
 python main.py "give me hardware based idea for me to control aqi of delhi"
 ```
 
-### Generate Visualizations
+### Generate Enhanced Visualizations
 
 ```bash
-python visualization.py
+python scripts/visualize.py
 ```
 
-**Generated Files:**
-1. `scores_comparison.png` - Score comparison charts
-2. `esg_radar.png` - ESG radar plots
-3. `feature_importance.png` - Feature importance heatmap
-4. `blockchain_timeline.png` - Blockchain integrity timeline
-5. `performance_metrics.png` - Performance dashboard
-6. `standards_compliance.png` - Standards compliance charts
+**Generated Files (Delhi AQI Case Study):**
+1. `delhi_aqi_comprehensive_scores.png` - Multi-metric score comparison with ESG and ethics
+2. `delhi_aqi_feasibility_analysis.png` - Economic feasibility bubble chart & risk radar
+3. `delhi_aqi_impact_matrix.png` - Impact vs effort prioritization quadrants
+4. `delhi_aqi_recommendation_flow.png` - Pipeline decision funnel visualization
+5. `delhi_aqi_technology_comparison.png` - Technology category analysis & timeline
+
+All visualizations are publication-ready (300 DPI) and saved in `visualizations/` folder.
 
 ### Project Structure
 
@@ -1051,10 +1052,11 @@ recomendation/
 │   ├── ...                        # Other core modules
 ├── enhanced_engine.py             # Enhanced engine (27 modules total)
 ├── main.py                        # Interactive CLI interface
-├── run_evaluation.py              # Full evaluation script
-├── visualization.py               # Visualization generator
-├── evaluation_standards.md        # Industry/research standards
-├── docs/document.md              # This documentation
+├── scripts/
+│   ├── run_evaluation.py          # Full evaluation script
+│   ├── visualize.py               # Enhanced visualizations
+│   └── faiss_manager.py           # FAISS index management (optional)
+├── docs/document.md               # This documentation
 ├── requirements.txt               # Python dependencies
 └── *.png                          # Generated visualizations
 ```
@@ -1063,11 +1065,12 @@ recomendation/
 
 | File | Description | Usage |
 |------|-------------|-------|
-| `run_evaluation.py` | Full end-to-end evaluation | Run first to verify system |
+| `scripts/run_evaluation.py` | Full end-to-end evaluation | Run first to verify system |
+| `scripts/visualize.py` | Enhanced result visualizations | Generate after evaluation |
+| `scripts/faiss_manager.py` | FAISS index management (optional) | Status, rebuild, benchmark |
 | `main.py` | Interactive prompt interface | Custom queries |
-| `visualization.py` | Generate all charts | After evaluation |
-| `evaluation_standards.md` | Industry standards compliance | Reference document |
 | `enhanced_engine.py` | 27-module hybrid engine | Core system logic |
+| `docs/document.md` | Complete technical documentation | Reference document |
 
 ### Example: Custom Query
 

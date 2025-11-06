@@ -39,10 +39,17 @@
 - Differential privacy (ε-DP) for federated learning
 - Duplicate detection to prevent redundancy
 
-### 📊 **Comprehensive Evaluation**
+### ⚡ **FAISS Vector Search**
+- Automatic FAISS indexing for datasets with 100+ ideas
+- Fallback to simple cosine similarity for small datasets
+- 10-100x faster search on large datasets
+- Future-ready for millions of ideas
+
+### 📊 **Comprehensive Evaluation & Visualization**
 - Research-grade metrics: nDCG@K, Precision@K, Recall@K, F1, Diversity, Fairness
-- Cross-validation support for model evaluation
-- Detailed explainability with feature attribution
+- Publication-ready visualizations for Delhi AQI case study
+- Multi-panel dashboards: scores, feasibility, impact matrix, technology analysis
+- Interactive decision support with effort vs impact prioritization
 
 ---
 
@@ -104,7 +111,14 @@ ollama pull mistral:7b
 
 ```bash
 pip install -r requirements.txt
+
+# Optional: Install FAISS for large-scale datasets (100+ ideas)
+pip install faiss-cpu
+# Or for GPU support:
+# pip install faiss-gpu
 ```
+
+**Note:** FAISS is optional. The system automatically uses simple similarity for small datasets and switches to FAISS when you have 100+ ideas.
 
 ---
 
@@ -124,11 +138,34 @@ python scripts/run_evaluation.py
 python main.py "sustainable technology for climate change"
 ```
 
-### Option 3: Generate Visualizations
+### Option 3: Generate Enhanced Visualizations
 
 ```bash
-# Create performance charts and dashboards
-python scripts/visualization.py
+# Create comprehensive visualizations for recommendation results
+python scripts/visualize.py
+```
+
+This generates 5 publication-ready visualizations:
+- **Comprehensive Scores**: Multi-metric comparison across recommendations
+- **Feasibility Analysis**: Economic ROI vs risk bubble chart
+- **Impact Matrix**: Effort vs impact prioritization quadrants
+- **Recommendation Flow**: Pipeline funnel showing filtering stages
+- **Technology Comparison**: Technology category distribution and performance
+
+### Option 4: Manage FAISS Index
+
+```bash
+# Check FAISS status and index info
+python scripts/faiss_manager.py status
+
+# Rebuild FAISS index after adding many ideas
+python scripts/faiss_manager.py rebuild
+
+# Benchmark FAISS vs simple search
+python scripts/faiss_manager.py benchmark --query "your test query"
+
+# Show detailed index information
+python scripts/faiss_manager.py info
 ```
 
 ### What It Does:
@@ -206,7 +243,8 @@ recomendation/
 │
 ├── scripts/                    # Utility scripts
 │   ├── run_evaluation.py      # Full end-to-end evaluation
-│   └── visualization.py       # Chart generation
+│   ├── visualize.py           # Enhanced result visualizations
+│   └── faiss_manager.py       # FAISS index management (optional)
 │
 ├── docs/                       # Documentation
 │   └── document.md            # Complete technical documentation
@@ -215,13 +253,12 @@ recomendation/
 │   ├── ideas.db              # Main SQLite database
 │   └── temporal_memory.db    # Temporal storage
 │
-├── visualizations/            # Generated charts
-│   ├── scores_comparison.png
-│   ├── esg_radar.png
-│   ├── feature_importance.png
-│   ├── blockchain_timeline.png
-│   ├── performance_metrics.png
-│   └── standards_compliance.png
+├── visualizations/            # Generated visualizations (Delhi AQI)
+│   ├── delhi_aqi_comprehensive_scores.png    # Multi-metric score comparison
+│   ├── delhi_aqi_feasibility_analysis.png    # Economic feasibility & ROI
+│   ├── delhi_aqi_impact_matrix.png           # Impact vs effort prioritization
+│   ├── delhi_aqi_recommendation_flow.png     # Pipeline decision funnel
+│   └── delhi_aqi_technology_comparison.png   # Technology analysis
 │
 ├── enhanced_engine.py         # 27-module hybrid engine
 ├── main.py                    # Interactive CLI

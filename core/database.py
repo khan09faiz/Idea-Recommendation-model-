@@ -1,6 +1,6 @@
 """
 Database Module
-SQLite-based storage with integrity hashing and vector search
+SQLite-based storage with integrity hashing and FAISS vector search
 """
 
 import sqlite3
@@ -10,6 +10,14 @@ import numpy as np
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass, asdict
+
+# FAISS import with fallback
+try:
+    import faiss
+    FAISS_AVAILABLE = True
+except ImportError:
+    FAISS_AVAILABLE = False
+    print("⚠️  FAISS not available, using simple cosine similarity")
 
 
 @dataclass
@@ -42,20 +50,30 @@ class Idea:
 
 class IdeaDatabase:
     """
-    SQLite database with integrity hashing and vector similarity search.
+    SQLite database with integrity hashing and FAISS vector similarity search.
     Ensures data integrity and tamper-evident storage.
+    Automatically uses FAISS for large datasets (>100 ideas), simple search for small ones.
     """
     
-    def __init__(self, db_path: str = "data/ideas.db"):
+    def __init__(self, db_path: str = "data/ideas.db", use_faiss: bool = True):
         """
         Initialize database connection and schema.
         
         Args:
             db_path: Path to SQLite database file
+            use_faiss: Whether to use FAISS (auto-fallback if unavailable)
         """
         self.db_path = db_path
         self.conn = sqlite3.connect(db_path)
+        self.use_faiss = use_faiss and FAISS_AVAILABLE
+        self.faiss_index = None
+        self.faiss_id_map = []  # Maps FAISS index to idea_id
+        self.embedding_dim = None
         self._init_schema()
+        
+        # Build FAISS index if enabled
+        if self.use_faiss:
+            self._build_faiss_index()
     
     def _init_schema(self):
         """Create database schema if not exists"""
@@ -148,6 +166,13 @@ class IdeaDatabase:
                 idea.author
             ))
             self.conn.commit()
+            
+            # Rebuild FAISS index if using FAISS and dataset is large enough
+            if self.use_faiss:
+                ideas_count = len(self.get_all_ideas())
+                if ideas_count >= 100:
+                    self.rebuild_faiss_index()
+            
             return idea.idea_id
         except Exception as e:
             print(f"Error adding idea: {e}")
@@ -238,9 +263,54 @@ class IdeaDatabase:
             "invalid_ids": invalid_ids
         }
     
+    def _build_faiss_index(self):
+        """
+        Build or rebuild FAISS index from all ideas in database.
+        Uses IndexFlatIP (inner product) for normalized vectors.
+        Auto-switches to simple search if <100 ideas.
+        """
+        ideas = self.get_all_ideas()
+        
+        if not ideas:
+            return
+        
+        # Use FAISS only for large datasets
+        if len(ideas) < 100:
+            print(f"📊 Dataset size: {len(ideas)} ideas - using simple similarity (FAISS threshold: 100)")
+            self.faiss_index = None
+            return
+        
+        # Get embedding dimension from first idea
+        self.embedding_dim = len(ideas[0].embedding)
+        
+        # Create FAISS index (IndexFlatIP for inner product/cosine similarity)
+        self.faiss_index = faiss.IndexFlatIP(self.embedding_dim)
+        
+        # Prepare embeddings matrix
+        embeddings = np.array([idea.embedding for idea in ideas], dtype=np.float32)
+        
+        # Normalize vectors for cosine similarity
+        faiss.normalize_L2(embeddings)
+        
+        # Add to index
+        self.faiss_index.add(embeddings)
+        
+        # Update ID mapping
+        self.faiss_id_map = [idea.idea_id for idea in ideas]
+        
+        print(f"✅ FAISS index built: {len(ideas)} ideas, dimension {self.embedding_dim}")
+    
+    def rebuild_faiss_index(self):
+        """
+        Rebuild FAISS index (call after adding/removing ideas).
+        """
+        if self.use_faiss:
+            self._build_faiss_index()
+    
     def search_similar(self, query_embedding: np.ndarray, top_k: int = 10) -> List[Tuple[str, float]]:
         """
-        Find similar ideas using cosine similarity.
+        Find similar ideas using FAISS or cosine similarity.
+        Automatically uses FAISS for large datasets (>100 ideas).
         
         Args:
             query_embedding: Query embedding vector
@@ -250,6 +320,55 @@ class IdeaDatabase:
             List of (idea_id, similarity_score) tuples
         """
         ideas = self.get_all_ideas()
+        
+        if not ideas:
+            return []
+        
+        # Use FAISS if index exists and dataset is large enough
+        if self.use_faiss and self.faiss_index is not None and len(ideas) >= 100:
+            return self._search_with_faiss(query_embedding, top_k)
+        else:
+            return self._search_simple(query_embedding, top_k, ideas)
+    
+    def _search_with_faiss(self, query_embedding: np.ndarray, top_k: int) -> List[Tuple[str, float]]:
+        """
+        FAISS-based vector search (for large datasets).
+        
+        Args:
+            query_embedding: Query vector
+            top_k: Number of results
+            
+        Returns:
+            List of (idea_id, similarity_score) tuples
+        """
+        # Prepare query vector
+        query_vector = query_embedding.astype(np.float32).reshape(1, -1)
+        faiss.normalize_L2(query_vector)
+        
+        # Search
+        similarities, indices = self.faiss_index.search(query_vector, min(top_k, len(self.faiss_id_map)))
+        
+        # Map indices to idea_ids
+        results = []
+        for i, (idx, sim) in enumerate(zip(indices[0], similarities[0])):
+            if idx < len(self.faiss_id_map):
+                idea_id = self.faiss_id_map[idx]
+                results.append((idea_id, float(sim)))
+        
+        return results
+    
+    def _search_simple(self, query_embedding: np.ndarray, top_k: int, ideas: List) -> List[Tuple[str, float]]:
+        """
+        Simple cosine similarity search (for small datasets).
+        
+        Args:
+            query_embedding: Query vector
+            top_k: Number of results
+            ideas: List of ideas
+            
+        Returns:
+            List of (idea_id, similarity_score) tuples
+        """
         similarities = []
         
         for idea in ideas:
