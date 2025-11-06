@@ -83,10 +83,17 @@ class InteractiveEthicsFilter:
                 if severity != "high":
                     severity = "medium"
                 should_flag = True
+                compliance_score = 0.2  # Low compliance for high-risk without indicators
             else:
                 # Has compliance indicators
-                compliance_score = len(compliance_found) / 5.0  # Normalize
-                compliance_score = min(1.0, compliance_score)
+                compliance_score = min(1.0, len(compliance_found) / 5.0)
+        else:
+            # Not high-risk domain, give moderate compliance score
+            compliance_found = self._check_compliance(safe_text)
+            if compliance_found:
+                compliance_score = min(1.0, len(compliance_found) / 3.0)
+            else:
+                compliance_score = 0.4  # Base compliance for normal ideas
         
         # Check for ethical indicators (positive signals)
         ethical_score = self._calculate_ethical_score(safe_text, metadata)
@@ -178,17 +185,14 @@ class InteractiveEthicsFilter:
         """Calculate ethical alignment score"""
         score = 0.0
         
-        # Positive ethical indicators
+        # Positive ethical indicators (expanded)
         ethical_indicators = {
-            "sustainable": 0.15,
-            "ethical": 0.15,
-            "fair": 0.10,
-            "inclusive": 0.10,
-            "accessible": 0.10,
-            "transparent": 0.10,
-            "responsible": 0.10,
-            "community": 0.10,
-            "environmental": 0.10
+            "sustainable": 0.12, "ethical": 0.12, "fair": 0.08, "inclusive": 0.08,
+            "accessible": 0.08, "transparent": 0.08, "responsible": 0.08,
+            "community": 0.08, "environmental": 0.08, "social": 0.08,
+            "benefit": 0.06, "improve": 0.06, "help": 0.06, "safe": 0.06,
+            "quality": 0.05, "education": 0.05, "health": 0.05, "welfare": 0.05,
+            "affordable": 0.05, "secure": 0.05, "privacy": 0.05, "people": 0.04
         }
         
         for indicator, weight in ethical_indicators.items():
@@ -200,6 +204,10 @@ class InteractiveEthicsFilter:
             esg = metadata.get("esg_scores", {})
             if isinstance(esg, dict):
                 score += esg.get("total_esg", 0.0) * 0.2
+        
+        # Base score for non-harmful content
+        if score == 0:
+            score = 0.1  # Baseline for neutral ideas
         
         return min(1.0, score)
     

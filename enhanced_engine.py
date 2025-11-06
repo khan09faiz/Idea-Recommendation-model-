@@ -91,15 +91,66 @@ class EnhancedRecommendationEngine(BaseEngine):
                 "error": "Failed to retrieve added idea"
             }
         
-        # Economic feasibility analysis
+        # Economic feasibility analysis with dynamic feature extraction
+        # Extract features from title and description
+        title_lower = title.lower()
+        desc_lower = description.lower()
+        
+        # Market size estimation based on keywords
+        market_indicators = {
+            'global': 0.9, 'international': 0.85, 'worldwide': 0.9,
+            'national': 0.7, 'regional': 0.5, 'local': 0.3, 'niche': 0.4,
+            'enterprise': 0.8, 'consumer': 0.7, 'b2b': 0.65, 'b2c': 0.7
+        }
+        market_size = 0.5  # Default
+        for keyword, score in market_indicators.items():
+            if keyword in title_lower or keyword in desc_lower:
+                market_size = max(market_size, score)
+        
+        # Revenue potential based on business model keywords
+        revenue_indicators = {
+            'subscription': 0.8, 'saas': 0.85, 'platform': 0.75, 'marketplace': 0.8,
+            'premium': 0.7, 'freemium': 0.65, 'advertising': 0.6, 'commission': 0.7,
+            'license': 0.75, 'consulting': 0.55, 'service': 0.6, 'product': 0.7,
+            'e-commerce': 0.75, 'online': 0.65, 'digital': 0.7
+        }
+        revenue_potential = 0.5  # Default
+        for keyword, score in revenue_indicators.items():
+            if keyword in title_lower or keyword in desc_lower:
+                revenue_potential = max(revenue_potential, score)
+        
+        # Cost estimation (inverse - lower is better)
+        cost_indicators = {
+            'low-cost': 0.2, 'affordable': 0.3, 'budget': 0.3, 'cheap': 0.25,
+            'minimal': 0.2, 'bootstrap': 0.25, 'lean': 0.3,
+            'expensive': 0.8, 'costly': 0.85, 'premium': 0.7, 'luxury': 0.75,
+            'hardware': 0.7, 'infrastructure': 0.75, 'manufacturing': 0.8,
+            'software': 0.4, 'app': 0.35, 'web': 0.3, 'digital': 0.35,
+            'ai': 0.5, 'ml': 0.5, 'automation': 0.45
+        }
+        cost = 0.5  # Default medium cost
+        for keyword, score in cost_indicators.items():
+            if keyword in title_lower or keyword in desc_lower:
+                cost = score
+                break  # Use first match
+        
+        # Adjust based on sentiment - positive sentiment suggests lower perceived cost/risk
+        if idea.sentiment > 0.3:
+            cost *= 0.9
+        elif idea.sentiment < -0.3:
+            cost *= 1.1
+        
         feasibility = self.economic_feasibility.analyze_feasibility({
-            "market_size": 0.5,  # Default, could be extracted from description
-            "revenue_potential": 0.5,
-            "cost": 0.5,
+            "market_size": market_size,
+            "revenue_potential": revenue_potential,
+            "cost": min(cost, 1.0),
             "trend": idea.trend_score,
             "sentiment": idea.sentiment,
             "uncertainty": idea.uncertainty,
-            "provenance": idea.provenance_score
+            "provenance": idea.provenance_score,
+            "complexity": 0.5,  # Could be enhanced further
+            "volatility": 0.5,
+            "regulatory_risk": 0.3
         })
         
         # Store embedding in temporal memory
@@ -173,14 +224,46 @@ class EnhancedRecommendationEngine(BaseEngine):
             # Apply ethics adjustment
             adjusted_score = result["final_score"] * ethics_result["adjustment_factor"]
             
-            # Economic feasibility
+            # Economic feasibility with dynamic feature extraction
             feasibility_score = 0.5
             if use_feasibility:
+                # Extract features from idea
+                title_lower = idea.title.lower()
+                desc_lower = idea.description.lower() if idea.description else ""
+                
+                # Market size estimation
+                market_indicators = {'global': 0.9, 'national': 0.7, 'local': 0.3, 'niche': 0.4}
+                market_size = 0.5
+                for keyword, score in market_indicators.items():
+                    if keyword in title_lower or keyword in desc_lower:
+                        market_size = max(market_size, score)
+                
+                # Revenue potential
+                revenue_indicators = {'subscription': 0.8, 'saas': 0.85, 'platform': 0.75, 'marketplace': 0.8}
+                revenue_potential = 0.5
+                for keyword, score in revenue_indicators.items():
+                    if keyword in title_lower or keyword in desc_lower:
+                        revenue_potential = max(revenue_potential, score)
+                
+                # Cost estimation
+                cost_indicators = {'low-cost': 0.2, 'affordable': 0.3, 'expensive': 0.8, 'hardware': 0.7}
+                cost = 0.5
+                for keyword, score in cost_indicators.items():
+                    if keyword in title_lower or keyword in desc_lower:
+                        cost = score
+                        break
+                
                 feasibility = self.economic_feasibility.analyze_feasibility({
+                    "market_size": market_size,
+                    "revenue_potential": revenue_potential,
+                    "cost": cost,
                     "trend": idea.trend_score,
                     "sentiment": idea.sentiment,
                     "uncertainty": idea.uncertainty,
-                    "provenance": idea.provenance_score
+                    "provenance": idea.provenance_score,
+                    "complexity": 0.5,
+                    "volatility": 0.5,
+                    "regulatory_risk": 0.3
                 })
                 feasibility_score = feasibility["feasibility_score"]
                 adjusted_score = adjusted_score * 0.8 + feasibility_score * 0.2

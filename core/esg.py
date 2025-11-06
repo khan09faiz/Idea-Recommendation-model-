@@ -8,9 +8,23 @@ class SustainabilityAndESGScorer:
     
     def __init__(self):
         self.esg_keywords = {
-            "environmental": ["climate", "carbon", "renewable", "sustainable", "green", "eco"],
-            "social": ["equity", "diversity", "inclusion", "community", "fair", "ethical"],
-            "governance": ["transparency", "compliance", "accountability", "integrity", "audit"]
+            "environmental": [
+                "climate", "carbon", "renewable", "sustainable", "green", "eco",
+                "clean", "environment", "pollution", "waste", "recycle", "energy",
+                "solar", "wind", "conservation", "biodiversity", "emission", "reduce"
+            ],
+            "social": [
+                "equity", "diversity", "inclusion", "community", "fair", "ethical",
+                "people", "employee", "worker", "education", "health", "safety",
+                "social", "benefit", "welfare", "accessible", "affordable", "human",
+                "customer", "user", "consumer", "impact", "help", "improve"
+            ],
+            "governance": [
+                "transparency", "compliance", "accountability", "integrity", "audit",
+                "govern", "policy", "regulation", "legal", "secure", "security",
+                "privacy", "protect", "standard", "quality", "certif", "manage",
+                "control", "monitoring", "report", "ethical", "responsible"
+            ]
         }
     
     def compute_esg_score(self, idea) -> Dict[str, float]:

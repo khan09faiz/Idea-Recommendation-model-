@@ -28,6 +28,7 @@ class FederatedFeedbackManager:
         self.local_updates = []
         self.global_weights = {}
         self.update_history = []
+        self.local_feedback = []  # Store individual feedback items
         
     def collect_local_updates(self, user_id: str, 
                               local_weights: Dict[str, float],
@@ -287,3 +288,58 @@ class FederatedFeedbackManager:
                 aggregated[key] = float(np.mean(values))
         
         return aggregated
+    
+    def add_local_feedback(self, feedback_data: Dict[str, Any]) -> bool:
+        """
+        Add individual feedback item (simplified interface for add_feedback.py).
+        
+        Args:
+            feedback_data: Dictionary with feedback info (idea_id, rating, etc.)
+            
+        Returns:
+            True if added successfully
+            
+        Security: Validates feedback data
+        """
+        if not feedback_data or not isinstance(feedback_data, dict):
+            return False
+        
+        # Store feedback
+        self.local_feedback.append({
+            "data": feedback_data,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+        # Convert to weight update format
+        idea_id = feedback_data.get("idea_id", "unknown")
+        rating = feedback_data.get("rating", 3)
+        
+        # Create simple weight update (normalize rating to 0-1)
+        weight_value = float(rating) / 5.0 if isinstance(rating, (int, float)) else 0.5
+        
+        local_weights = {
+            f"idea_{idea_id}_rating": weight_value,
+            "feedback_count": 1.0
+        }
+        
+        # Collect as update
+        update_id = self.collect_local_updates(
+            user_id=feedback_data.get("user_id", "default_user"),
+            local_weights=local_weights,
+            encrypt=False  # Simplified for local use
+        )
+        
+        return update_id is not None
+    
+    def aggregate_updates(self, method: str = "fedavg") -> Dict[str, float]:
+        """
+        Aggregate updates (simplified interface for add_feedback.py).
+        
+        Args:
+            method: Aggregation method (fedavg, median, trimmed_mean)
+            
+        Returns:
+            Aggregated global weights
+        """
+        # Use existing aggregation method
+        return self.aggregate_global_weights(aggregation_method=method)

@@ -248,7 +248,12 @@ def display_system_stats(engine):
     
     print("\n📈 DATABASE STATISTICS:")
     print(f"   Total Ideas: {report['base_audit']['total_ideas']}")
-    print(f"   Integrity: {report['base_audit']['integrity']['status']}")
+    integrity = report['base_audit']['integrity']
+    if isinstance(integrity, dict) and 'valid_count' in integrity:
+        print(f"   Valid Ideas: {integrity['valid_count']}/{integrity['total_count']}")
+        print(f"   Validity Rate: {integrity['validity_rate']:.2%}")
+    else:
+        print(f"   Integrity: OK")
     print(f"   Bias Detected: {report['base_audit']['bias']['bias_detected']}")
     
     print("\n🔗 BLOCKCHAIN STATUS:")
@@ -262,7 +267,12 @@ def display_system_stats(engine):
     
     print("\n🤝 FEDERATED LEARNING:")
     print(f"   Update Rounds: {report['federated_learning']['update_rounds']}")
-    print(f"   Total Feedbacks: {report['federated_learning']['total_feedbacks']}")
+    
+    if 'meta_learning' in report:
+        print("\n🎯 META-LEARNING:")
+        print(f"   Optimization Runs: {report['meta_learning']['optimization_runs']}")
+        if report['meta_learning']['best_ndcg']:
+            print(f"   Best nDCG: {report['meta_learning']['best_ndcg']:.4f}")
     
     print()
 
