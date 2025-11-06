@@ -168,7 +168,7 @@ python scripts/visualize.py
 
 All visualizations saved to `visualizations/` directory at 300 DPI (publication quality)
 
-### Option 4: Interactive Feedback System (NEW! 🎯)
+### Option 4: Interactive Feedback System 
 
 ```bash
 # Provide feedback to improve recommendations
