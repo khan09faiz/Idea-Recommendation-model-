@@ -383,7 +383,7 @@ Ranking Algorithm: Hybrid (27 modules)
 [Ethics Filter] ──[BLOCK]→ [Rejected]
     ↓ [PASS]
 [Duplicate Check] ──[EXISTS]→ [Skip]
-    ↓ [NEW]
+    ↓ 
 [Feature Extraction Pipeline]
     ├─→ [Sentiment: TextBlob/Transformers] → sentiment_score
     ├─→ [Trend: Exponential smoothing] → trend_score
@@ -883,7 +883,7 @@ Ideas in DB     Avg Query Time    Memory Usage    Blockchain Size
 ```bibtex
 @software{gig2025,
   title={GIG: Greatest Idea Generation - AI-Powered Idea Recommendation System},
-  author={[Your Name]},
+  author={[Faiz ADYA HASHWARDHAN]},
   year={2025},
   url={https://github.com/khan09faiz/Idea-Recommendation-model-},
   note={27-module system integrating causal reasoning, economic feasibility, 
@@ -1028,13 +1028,6 @@ python main.py "give me hardware based idea for me to control aqi of delhi"
 ```bash
 python scripts/visualize.py
 ```
-
-**Generated Files (Delhi AQI Case Study):**
-1. `delhi_aqi_comprehensive_scores.png` - Multi-metric score comparison with ESG and ethics
-2. `delhi_aqi_feasibility_analysis.png` - Economic feasibility bubble chart & risk radar
-3. `delhi_aqi_impact_matrix.png` - Impact vs effort prioritization quadrants
-4. `delhi_aqi_recommendation_flow.png` - Pipeline decision funnel visualization
-5. `delhi_aqi_technology_comparison.png` - Technology category analysis & timeline
 
 All visualizations are publication-ready (300 DPI) and saved in `visualizations/` folder.
 
