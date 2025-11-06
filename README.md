@@ -1,4 +1,8 @@
-# GIG - Greatest idea genrator
+<<<<<<< HEAD
+# GIG - Greatest Idea Generation
+=======
+# GIG
+>>>>>>> 8dd8a034fb573b7b41faadedfcd12f63349ba556
 
 **GIG** - A state-of-the-art recommendation engine with **27 integrated modules** combining LLMs, causal reasoning, economic analysis, and blockchain integrity.
 
@@ -13,23 +17,23 @@
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-### 🧠 **AI-Powered Idea Generation**
+###  **AI-Powered Idea Generation**
 - Generate ideas from natural language prompts using Ollama LLMs
 - Supports llama3.2:1b, mistral:7b, and other local models  
 - Automatic parsing and structuring of generated content
 
-### 🎯 **27 Integrated Modules**
+###  **27 Integrated Modules**
 - **18 Base Modules**: Ollama, Database, Sentiment, Trend, ESG, Explainability, Fairness, MMR, Graph, and more
 - **9 Advanced Modules**: Causal Reasoning, Economic Feasibility, Federated Learning, Blockchain, Ethics Filter, Twin Generator, Temporal Memory, Meta-Learning, Evaluation Dashboard
 
-### 🔍 **Intelligent Ranking**
+### **Intelligent Ranking**
 - 9-component hybrid scoring: Elo + Bayesian + Uncertainty + Sentiment + Provenance + Freshness + Trend + Causal + Serendipity
 - Enhanced with causal impact analysis and economic feasibility scoring
 - Ethics and compliance adjustments for responsible AI
 
-### 🔐 **Security & Integrity**
+###  **Security & Integrity**
 - Blockchain-based tamper-proof provenance chain
 - SHA-256 integrity hashing for all ideas
 - Differential privacy (ε-DP) for federated learning
@@ -272,13 +276,7 @@ recomendation/
     └── ...                    # + 24 more modules
 ```
 
----
 
-## 📝 License
-
-MIT License - Free to use and modify
-
----
 
 **🎯 Ready to generate and recommend innovative ideas? Run `python main.py "your prompt here"` to get started!**
 
