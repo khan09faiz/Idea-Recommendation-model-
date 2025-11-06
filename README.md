@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 # GIG - Greatest Idea Generation
-=======
-# GIG
->>>>>>> 8dd8a034fb573b7b41faadedfcd12f63349ba556
-
 **GIG** - A state-of-the-art recommendation engine with **27 integrated modules** combining LLMs, causal reasoning, economic analysis, and blockchain integrity.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
