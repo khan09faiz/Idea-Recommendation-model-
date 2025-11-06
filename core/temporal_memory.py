@@ -13,7 +13,7 @@ class TemporalMemoryManager:
     Stores past idea vectors by timestamp for temporal context retrieval.
     """
     
-    def __init__(self, db_path: str = "temporal_memory.db", 
+    def __init__(self, db_path: str = "data/temporal_memory.db", 
                  embedding_dim: int = 384,
                  max_memory_days: int = 365):
         """

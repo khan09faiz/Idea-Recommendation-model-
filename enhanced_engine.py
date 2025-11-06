@@ -25,7 +25,7 @@ class EnhancedRecommendationEngine(BaseEngine):
     federated learning, blockchain integrity, and more.
     """
     
-    def __init__(self, db_path: str = "ideas.db", ollama_model: str = "llama2"):
+    def __init__(self, db_path: str = "data/ideas.db", ollama_model: str = "llama2"):
         """
         Initialize enhanced engine with all modules.
         
@@ -73,6 +73,14 @@ class EnhancedRecommendationEngine(BaseEngine):
         
         # Add idea using base method
         idea_id = self.add_idea(title, description, author, tags)
+        
+        # Check if idea was added (None means duplicate)
+        if not idea_id:
+            return {
+                "success": False,
+                "error": "Duplicate idea already exists",
+                "duplicate": True
+            }
         
         # Get the idea object
         idea = self.db.get_idea_by_id(idea_id)

@@ -277,7 +277,7 @@ def main():
     
     try:
         engine = EnhancedRecommendationEngine(
-            db_path="ideas.db",
+            db_path="data/ideas.db",
             ollama_model="llama3.2:1b"  # Using available model
         )
         print("   ✅ Engine initialized successfully\n")
@@ -326,7 +326,7 @@ def main():
         print(f"   ✅ Database Updated: ideas.db")
         print(f"   ✅ Blockchain Verified: All ideas have tamper-proof hashes")
         print(f"   ✅ No Duplicates: Duplicate detection active")
-        print(f"\n   📄 See 'adya_read_it.md' for detailed documentation")
+        print(f"\n   📄 See 'docs/document.md' for detailed documentation")
         print(f"   📊 See 'README.md' for project overview\n")
         
         return 0

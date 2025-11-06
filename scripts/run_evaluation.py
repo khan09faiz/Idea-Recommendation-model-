@@ -6,6 +6,9 @@ Hardware-based AQI Control Ideas for Delhi
 import sys
 import os
 
+# Add parent directory to Python path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 # Set UTF-8 encoding
 if sys.platform == 'win32':
     import codecs
@@ -19,7 +22,7 @@ import json
 
 def main():
     print("\n" + "=" * 90)
-    print("  ADYA - AI-POWERED IDEA RECOMMENDATION SYSTEM")
+    print("  GIG - GREATEST IDEA GENERATION")
     print("  Full End-to-End Evaluation with Industry Standards")
     print("=" * 90)
     print(f"  Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -27,7 +30,7 @@ def main():
     
     # Initialize engine
     print("[STEP 1] Initializing Enhanced Recommendation Engine (27 Modules)...")
-    engine = EnhancedRecommendationEngine(db_path="ideas.db", ollama_model="llama3.2:1b")
+    engine = EnhancedRecommendationEngine(db_path="data/ideas.db", ollama_model="llama3.2:1b")
     print("         SUCCESS: All 27 modules loaded\n")
     
     # User prompt
@@ -66,6 +69,7 @@ def main():
     print("         Pipeline: Ethics Filter -> Feasibility -> Database -> Blockchain -> Temporal\n")
     
     added_ideas = []
+    skipped_duplicates = 0
     for idx, idea in enumerate(ideas_to_add, 1):
         print(f"         [{idx}/{len(ideas_to_add)}] {idea['title'][:60]}...")
         
@@ -81,6 +85,9 @@ def main():
             print(f"             - Risk Level: {result['feasibility_analysis']['risk_level']}")
             print(f"             - Blockchain Hash: {result['blockchain_hash'][:32]}...")
             print()
+        elif result.get("duplicate"):
+            skipped_duplicates += 1
+            print(f"             SKIPPED: Already exists in database\n")
         else:
             print(f"             FAILED: {result.get('error')}\n")
     
@@ -152,12 +159,13 @@ def main():
         print(f"\nSummary:")
         print(f"  - Ideas Generated: {len(ideas_to_add)}")
         print(f"  - Ideas Added: {len(added_ideas)}")
+        print(f"  - Duplicates Skipped: {skipped_duplicates}")
         print(f"  - Recommendations Returned: {len(recommendations)}")
         print(f"  - Database Updated: YES")
         print(f"  - Blockchain Verified: YES")
-        print(f"  - No Duplicates: YES (detection active)")
-        print(f"\nOutput saved to: ideas.db")
-        print(f"Documentation: adya_read_it.md")
+        print(f"  - Duplicate Detection: ACTIVE")
+        print(f"\nOutput saved to: data/ideas.db")
+        print(f"Documentation: docs/document.md")
         print("\n" + "=" * 90 + "\n")
         
         return 0

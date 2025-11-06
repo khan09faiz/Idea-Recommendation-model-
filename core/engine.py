@@ -26,7 +26,7 @@ from core.mmr import MMRDiversityRanker
 class RecommendationEngine:
     """Complete end-to-end recommendation system"""
     
-    def __init__(self, db_path: str = "ideas.db", ollama_model: str = "llama2"):
+    def __init__(self, db_path: str = "data/ideas.db", ollama_model: str = "llama2"):
         """
         Initialize all modules
         

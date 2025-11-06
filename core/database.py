@@ -46,7 +46,7 @@ class IdeaDatabase:
     Ensures data integrity and tamper-evident storage.
     """
     
-    def __init__(self, db_path: str = "ideas.db"):
+    def __init__(self, db_path: str = "data/ideas.db"):
         """
         Initialize database connection and schema.
         
@@ -103,14 +103,24 @@ class IdeaDatabase:
     def add_idea(self, idea: Idea) -> str:
         """
         Add new idea to database with integrity hash.
+        Prevents duplicate ideas by checking title.
         
         Args:
             idea: Idea object to add
             
         Returns:
-            Generated idea_id if successful, None otherwise
+            Generated idea_id if successful, None if duplicate or error
         """
         try:
+            # Check if idea with same title already exists
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT idea_id FROM ideas WHERE title = ?", (idea.title,))
+            existing = cursor.fetchone()
+            
+            if existing:
+                print(f"⚠️  Duplicate detected: '{idea.title}' already exists (ID: {existing[0]})")
+                return None
+            
             # Generate idea_id if empty
             if not idea.idea_id:
                 idea.idea_id = hashlib.md5(f"{idea.title}{idea.timestamp.isoformat()}".encode()).hexdigest()[:16]
@@ -118,9 +128,8 @@ class IdeaDatabase:
             # Generate integrity hash
             idea.hash_signature = self._generate_hash(idea)
             
-            cursor = self.conn.cursor()
             cursor.execute("""
-                INSERT OR REPLACE INTO ideas VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO ideas VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 idea.idea_id,
                 idea.title,
