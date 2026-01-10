@@ -137,7 +137,7 @@ pip install faiss-cpu
 
 ## 🎮 Quick Start
 
-### Option 1: Full Evaluation (Recommended)
+### Option 1: Full Evaluation
 
 ```bash
 # Run complete end-to-end evaluation
