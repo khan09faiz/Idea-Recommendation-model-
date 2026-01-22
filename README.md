@@ -1,4 +1,17 @@
 # GIG - Greatest Idea Generation
+
+## ⚠️ PATENT NOTICE - READ FIRST
+
+**🚨 THIS IS PATENTED INTELLECTUAL PROPERTY - NOT FOR COPY-PASTE 🚨**
+
+This software is **PATENTED** and protected under intellectual property laws. Unauthorized copying, reproduction, or use is **STRICTLY PROHIBITED** and will result in legal action. This code is for **reference and educational purposes only**. Any implementation requires explicit written authorization from the patent holder.
+
+**Violators will be prosecuted. Unauthorized use is actively monitored and WILL BE DETECTED.**
+
+📄 **[Read Full Patent Notice & Terms](PATENT_NOTICE.md)** - You MUST read and comply with all terms before proceeding.
+
+---
+
 **GIG** - A state-of-the-art recommendation engine with **27 integrated modules** combining LLMs, causal reasoning, economic analysis, and blockchain integrity.
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
